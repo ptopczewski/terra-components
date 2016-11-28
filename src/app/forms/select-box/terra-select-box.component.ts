@@ -31,20 +31,26 @@ export class TerraSelectBoxComponent implements OnInit, OnChanges
     @Input() inputListBoxValues:Array<TerraSelectBoxValueInterface>;
     @Input() inputDefaultSelection:number | string;
     @Output() outputValueChanged = new EventEmitter<TerraSelectBoxValueInterface>();
-    @Output() inputSelectedValueChange = new EventEmitter<TerraSelectBoxValueInterface>();
+    @Output() inputSelectedValueChange = new EventEmitter<any>();
     
     @Input()
-    set inputSelectedValue(value:TerraSelectBoxValueInterface)
+    set inputSelectedValue(value:number | string)
     {
         if(value)
         {
-            this.select(value);
+            this.inputListBoxValues.forEach((item:TerraSelectBoxValueInterface)=>
+                                            {
+                                                if(item.value == value)
+                                                {
+                                                    this.select(item);
+                                                }
+                                            });
         }
     }
     
-    get inputSelectedValue():TerraSelectBoxValueInterface
+    get inputSelectedValue():number | string
     {
-        return this._selectedValue;
+        return this._selectedValue.value;
     }
     
     private _selectedValue:TerraSelectBoxValueInterface;
@@ -108,13 +114,31 @@ export class TerraSelectBoxComponent implements OnInit, OnChanges
         {
             if(key == "inputListBoxValues" && this._isInit == true)
             {
-                changes[key].currentValue.forEach((item:TerraSelectBoxValueInterface) =>
-                                                  {
-                                                      if(item.active && item.active == true)
-                                                      {
-                                                          this.select(item);
-                                                      }
-                                                  });
+                if(changes[key].currentValue.length > 0)
+                {
+                    this.inputListBoxValues.forEach((item:TerraSelectBoxValueInterface)=>
+                                                    {
+                                                        if(item.value == changes[key].currentValue[0].value)
+                                                        {
+                                                            this._selectedValue = item;
+                            
+                                                            this.inputSelectedValueChange.emit(item);
+                                                        }
+                                                    });
+                    
+                    //this.select(this.searchListBoxValue(changes[key].currentValue[0].value));
+                    
+                    //changes[key].currentValue.forEach((item:TerraSelectBoxValueInterface) =>
+                    //                                  {
+                    //                                      if(item.active && item.active == true)
+                    //                                      {
+                    //                                          this.select(item);
+                    //                                          return;
+                    //                                      }
+                    //                                  });
+                }
+                
+                
             }
         }
     }
@@ -137,19 +161,36 @@ export class TerraSelectBoxComponent implements OnInit, OnChanges
      */
     private select(value:TerraSelectBoxValueInterface):void
     {
-        for(let i = 0; i < this.inputListBoxValues.length; i++)
+        if(value)
         {
-            if(this.inputListBoxValues[i].value == value.value || this.inputListBoxValues[i].caption == value.caption)
+            for(let i = 0; i < this.inputListBoxValues.length; i++)
             {
-                this._selectedValue.active = false;
-                value.active = true;
-                this._selectedValue = this.inputListBoxValues[i];
-                this.outputValueChanged.emit(this.inputListBoxValues[i]);
-                this.inputSelectedValueChange.emit(this.inputListBoxValues[i]);
-                
-                return;
+                if(this.inputListBoxValues[i].value == value.value)
+                {
+                    this._selectedValue.active = false;
+                    value.active = true;
+                    this._selectedValue = this.inputListBoxValues[i];
+                    this.outputValueChanged.emit(this.inputListBoxValues[i]);
+                    this.inputSelectedValueChange.emit(this.inputListBoxValues[i].value);
+                    
+                    return;
+                }
             }
         }
+    }
+    
+    private searchListBoxValue(value:any):TerraSelectBoxValueInterface
+    {
+        let result:any = null;
+        
+        this.inputListBoxValues.forEach((item:TerraSelectBoxValueInterface)=>
+                                        {
+                                            if(item.value == value)
+                                            {
+                                                result = item;
+                                            }
+                                        });
+        return result;
     }
     
     /**
