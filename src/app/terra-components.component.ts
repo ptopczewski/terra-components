@@ -19,7 +19,7 @@ export class TerraComponentsComponent extends Locale implements OnInit
 {
     private _viewContainerRef:ViewContainerRef;
     private values:Array<TerraSelectBoxValueInterface>;
-    private selectedValue:any;
+    private selectedValue:TerraSelectBoxValueInterface;
     
     
     public constructor(private viewContainerRef:ViewContainerRef,
