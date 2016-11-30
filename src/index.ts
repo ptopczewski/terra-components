@@ -46,3 +46,4 @@ export * from './app/tree/terra-tree.component';
 export * from './app/tree/base/terra-base-tree.component';
 export * from './app/tree/checkbox-tree/terra-checkbox-tree.component';
 export * from './app/tree/leaf/terra-leaf.interface';
+export * from './app/collapsible/terra-collapsible.component';

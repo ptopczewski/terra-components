@@ -48,6 +48,8 @@ export { TerraBaseTreeComponent } from './tree/base/terra-base-tree.component';
 export { TerraCheckboxTreeComponent } from './tree/checkbox-tree/terra-checkbox-tree.component';
 export { TerraLeafInterface } from './tree/leaf/terra-leaf.interface';
 export { TerraDynamicModuleLoaderComponent } from './dynamic-module-loader/terra-dynamic-module-loader.component';
+export { TerraCollapsibleComponent } from './collapsible/terra-collapsible.component';
+
 
 import { BrowserModule } from '@angular/platform-browser';
 import {
@@ -98,12 +100,14 @@ import { TerraAlertPanelComponent } from './alert/terra-alert-panel.component';
 import { TerraDynamicModuleLoaderComponent } from './dynamic-module-loader/terra-dynamic-module-loader.component';
 import { TerraSimpleTableComponent } from './table/simple/terra-simple-table.component';
 import { COMPILER_PROVIDERS } from '@angular/compiler';
+import { TerraCollapsibleComponent } from './collapsible/terra-collapsible.component';
 import {
     LocaleService,
     LocalizationService,
     LocaleModule,
     LocalizationModule
 } from 'angular2localization';
+
 
 @NgModule({
               declarations:    [
@@ -135,7 +139,8 @@ import {
                   TerraSplitViewComponent,
                   TerraFilterComponent,
                   TerraMultiSelectBoxComponent,
-                  TerraDynamicModuleLoaderComponent
+                  TerraDynamicModuleLoaderComponent,
+                  TerraCollapsibleComponent
               ],
               entryComponents: [
                   TerraTextInputComponent,
@@ -161,7 +166,9 @@ import {
                   TerraPortletComponent,
                   TerraSplitViewComponent,
                   TerraFilterComponent,
-                  TerraMultiSelectBoxComponent
+                  TerraMultiSelectBoxComponent,
+                  TerraDynamicModuleLoaderComponent,
+                  TerraCollapsibleComponent
               ],
               exports:         [
                   TerraAlertPanelComponent,
@@ -190,7 +197,8 @@ import {
                   TerraSplitViewComponent,
                   TerraFilterComponent,
                   TerraMultiSelectBoxComponent,
-                  TerraDynamicModuleLoaderComponent
+                  TerraDynamicModuleLoaderComponent,
+                  TerraCollapsibleComponent
               ],
               imports:         [
                   BrowserModule,

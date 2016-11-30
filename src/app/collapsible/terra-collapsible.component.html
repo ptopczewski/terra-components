@@ -1,0 +1,8 @@
+<terra-button [inputCaption]="inputButtonCaption" (outputClicked)="isCollapsed = !isCollapsed"></terra-button>
+
+<div [ngClass]="{
+                  'collapse': isCollapsed
+                }">
+    <div class="panel-body">Panel Body</div>
+    <div class="panel-footer">Panel Footer</div>
+</div>
