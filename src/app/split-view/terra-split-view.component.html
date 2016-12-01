@@ -6,14 +6,18 @@
             </span>
             {{module.name}}
         </template>
-        <terra-button *ngIf="inputModules" [inputIsSmall]="true" inputCaption="{{ 'back' | translate:lang }}"
+        <terra-button *ngIf="inputModules && inputModules.length != 0" [inputIsSmall]="true" inputCaption="{{ 'back' | translate:lang }}"
                       [inputIsDisabled]="isSingleComponent" [inputIsAlignRight]="true" (outputClicked)="onClick()"></terra-button>
     </terra-base-toolbar>
-    <div class="side-scroller" *ngIf="inputModules">
+    <div class="side-scroller" *ngIf="inputModules" [style.left]="100" title="test">
         <template ngFor let-module [ngForOf]="inputModules" let-last="last" let-first="first">
-            <div *ngIf="!module.hidden" [style.width]="module.defaultWidth">
-                <terra-dynamic-module-loader *ngIf="!module.hidden" [inputModule]="module.module"
-                                             [inputMainComponentName]="module.mainComponentName"></terra-dynamic-module-loader>
+            <div class="flexible-width" *ngIf="!module.hidden" [style.width]="module.defaultWidth">
+                <!--<terra-dynamic-module-loader *ngIf="!module.hidden" [inputModule]="module.module"-->
+                                             <!--[inputMainComponentName]="module.mainComponentName"></terra-dynamic-module-loader>-->
+                <p>
+                    Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>
+                    Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>
+                </p>
             </div>
             <!--TODO make divider draggable-->
             <div class="divider" *ngIf="!last && !module.hidden"></div>
