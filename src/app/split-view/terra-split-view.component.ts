@@ -80,42 +80,7 @@ export class TerraSplitViewComponent extends Locale implements DoCheck
             }
         }
         
-        jQuery(this.elementRef.nativeElement).find('.divider').draggable({ axis: "x" });
-        //jQuery(this.elementRef.nativeElement).find('.divider').mousedown(function()
-        //                                                               {
-        //                                                                   jQuery('.side-scroller').addClass("flexible-width");
-        //                                                               });
-        //jQuery(this.elementRef.nativeElement).find('.divider').mouseup(function()
-        //                                                             {
-        //                                                                 jQuery('.side-scroller').removeClass("flexible-width");
-        //                                                             });
-        jQuery(this.elementRef.nativeElement).find('.divider').draggable({
-                                                                             start: function()
-                                                                                    {
-                                                                                        
-                                                                                        
-                                                                                        //jQuery('.divider').each(function(elem)
-                                                                                        //                        {
-                                                                                        //                            elem.setStyle('side-scroller', 'width', 'auto')
-                                                                                        //                        });
-                                                                                    },
-                                                                             drag:  function()
-                                                                                    {
-                                                                                        var p = jQuery( ".divider" );
-                                                                                        var position = p.position();
-                                                                                        //jQuery( ".side-scroller > *" ).text( "left: " + position.left + ", top: " + position.top );
-                                                                                        jQuery(".flexible-width").attr({
-                                                                                                           "style" : "width: " + (position.left / window.innerWidth*100)+'%'
-                                                                                                       });
-                                                                                    },
-                                                                             stop:  function()
-                                                                                    {
-                                                                                        //jQuery('.divider')
-                                                                                        //    .setStyle('side-scroller', 'width', '32.8%');
-                                                                                    }
-                                                                         });
-        jQuery('.divider').position()
-    
+        this.onDraggableDivider();
     }
     
     private onClick():void
@@ -131,5 +96,51 @@ export class TerraSplitViewComponent extends Locale implements DoCheck
     public set isSingleComponent(value:boolean)
     {
         this._isSingleComponent = value;
+    }
+    
+    private onDraggableDivider():void
+    {
+        jQuery(this.elementRef.nativeElement).find('.divider').draggable({ axis: "x", containment: ".side-scroller" });
+    
+        this.inputModules.forEach(
+            (module) =>
+            {
+                var idDivider = 'divider_' + module.name;
+                var idView = module.name;
+                var rightViewStartPosition = '';
+                var rightViewStartWidth = '';
+                jQuery(this.elementRef.nativeElement).find('.divider#' + idDivider).draggable({
+                                                                                                  start: function()
+                                                                                                         {
+                                                                                                             var startPos = jQuery('.divider#' + idDivider + ' + *');
+                                                                                                             var startPosition = startPos.position();
+                                                                                                             this.rightViewStartPosition = startPosition.left;
+    
+                                                                                                             var wRight = jQuery('.divider#' + idDivider + ' + *');
+                                                                                                             var rightViewWidth = wRight.width();
+                                                                                                             this.rightViewStartWidth = rightViewWidth;
+                                                                                                         },
+                                                                                                  drag:  function()
+                                                                                                         {
+                                                                                                             var p = jQuery('.divider#' + idDivider);
+                                                                                                             var position = p.position();
+                                                                                                             var w = jQuery('.side-scroller');
+                                                                                                             var width = w.width();
+                                                                                                             
+                                                                                                             // change width of left view
+                                                                                                             jQuery(".flexible-width#" + idView).attr({
+                                                                                                                                                          "style": "width: " + (position.left / width * 100) + '%'
+                                                                                                                                                      });
+                                                                                                             // change width of right view
+                                                                                                             jQuery('.divider#' + idDivider + ' + *').attr({
+                                                                                                                                                               "style": "width: " + (width - position.left - this.rightViewStartPosition) + 'px'
+                                                                                                                                                           });
+                                                                                                         },
+                                                                                                  stop:  function()
+                                                                                                         {
+                                                                                                         }
+                                                                                              });
+            }
+        )
     }
 }

@@ -9,18 +9,26 @@
         <terra-button *ngIf="inputModules && inputModules.length != 0" [inputIsSmall]="true" inputCaption="{{ 'back' | translate:lang }}"
                       [inputIsDisabled]="isSingleComponent" [inputIsAlignRight]="true" (outputClicked)="onClick()"></terra-button>
     </terra-base-toolbar>
-    <div class="side-scroller" *ngIf="inputModules" [style.left]="100" title="test">
+    <div class="side-scroller" *ngIf="inputModules">
         <template ngFor let-module [ngForOf]="inputModules" let-last="last" let-first="first">
-            <div class="flexible-width" *ngIf="!module.hidden" [style.width]="module.defaultWidth">
+            <div class="flexible-width" id="{{module.name}}" *ngIf="!module.hidden" [style.width]="module.defaultWidth">
                 <!--<terra-dynamic-module-loader *ngIf="!module.hidden" [inputModule]="module.module"-->
                                              <!--[inputMainComponentName]="module.mainComponentName"></terra-dynamic-module-loader>-->
-                <p>
-                    Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>
-                    Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>Test<br>
+                <p style="white-space: pre-wrap">
+                    {{module.name}}<br>
+                    Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut<br>
+                    labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores<br>
+                    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem<br>
+                    ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et<br>
+                    dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.<br>
+                    Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit<br>
+                    amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna<br>
+                    aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita<br>
+                    kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
                 </p>
             </div>
             <!--TODO make divider draggable-->
-            <div class="divider" *ngIf="!last && !module.hidden"></div>
+            <div class="divider" id="divider_{{module.name}}" *ngIf="!last && !module.hidden"></div>
         </template>
     </div>
 </div>
