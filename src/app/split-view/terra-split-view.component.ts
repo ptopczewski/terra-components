@@ -26,6 +26,7 @@ export class TerraSplitViewComponent extends Locale implements DoCheck
     @Input() inputShowBreadcrumbs:boolean;
     private _isSingleComponent:boolean;
     private elementRef:ElementRef;
+    private _breadCrumbsPath:string;
     
     constructor(@Inject(ElementRef) elementRef:ElementRef,
                 public locale:LocaleService,
@@ -34,7 +35,9 @@ export class TerraSplitViewComponent extends Locale implements DoCheck
         super(locale, localization);
         this.elementRef = elementRef;
         this.inputShowBreadcrumbs = true;
+        this._breadCrumbsPath = '';
     }
+    
     
     ngDoCheck()
     {
@@ -83,9 +86,14 @@ export class TerraSplitViewComponent extends Locale implements DoCheck
         this.onDraggableDivider();
     }
     
-    private onClick():void
+    public get breadCrumbsPath():string
     {
-        this.inputModules.pop();
+        return this._breadCrumbsPath;
+    }
+    
+    public set isSingleComponent(value:boolean)
+    {
+        this._isSingleComponent = value;
     }
     
     public get isSingleComponent():boolean
@@ -93,9 +101,28 @@ export class TerraSplitViewComponent extends Locale implements DoCheck
         return this._isSingleComponent;
     }
     
-    public set isSingleComponent(value:boolean)
+    private onClick():void
     {
-        this._isSingleComponent = value;
+        this.inputModules.pop();
+    }
+    
+    private copyPath():void
+    {
+        this._breadCrumbsPath = "";
+        this.inputModules.forEach
+        (
+            (module) =>
+            {
+                if(this._breadCrumbsPath == '')
+                {
+                    this._breadCrumbsPath += module.name;
+                }
+                else
+                {
+                    this._breadCrumbsPath += '»' + module.name;
+                }
+            }
+        )
     }
     
     private onDraggableDivider():void
