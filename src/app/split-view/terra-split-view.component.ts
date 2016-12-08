@@ -1,9 +1,10 @@
 import {
     Component,
     Input,
-    DoCheck,
     ElementRef,
-    Inject
+    Inject,
+    OnChanges,
+    DoCheck
 } from '@angular/core';
 import { TerraSplitViewInterface } from './data/terra-split-view.interface';
 import {
@@ -20,8 +21,9 @@ declare var jQuery:any;
                styles:   [require('./terra-split-view.component.scss').toString()],
                template: require('./terra-split-view.component.html')
            })
-export class TerraSplitViewComponent extends Locale implements DoCheck
+export class TerraSplitViewComponent extends Locale implements OnChanges, DoCheck
 {
+    
     @Input() inputModules:Array<TerraSplitViewInterface>;
     @Input() inputShowBreadcrumbs:boolean;
     private _isSingleComponent:boolean;
@@ -82,7 +84,10 @@ export class TerraSplitViewComponent extends Locale implements DoCheck
                 this._isSingleComponent = false;
             }
         }
-        
+    }
+    
+    ngOnChanges()
+    {
         this.onDraggableDivider();
     }
     
@@ -127,46 +132,45 @@ export class TerraSplitViewComponent extends Locale implements DoCheck
     
     private onDraggableDivider():void
     {
-        jQuery(this.elementRef.nativeElement).find('.divider').draggable({ axis: "x", containment: ".side-scroller" });
-    
+        jQuery(this.elementRef.nativeElement).find('.divider').draggable({
+                                                                             axis:        "x",
+                                                                             containment: ".side-scroller"
+                                                                         });
         this.inputModules.forEach(
             (module) =>
             {
                 var idDivider = 'divider_' + module.name;
                 var idView = module.name;
-                var rightViewStartPosition = '';
-                var rightViewStartWidth = '';
-                jQuery(this.elementRef.nativeElement).find('.divider#' + idDivider).draggable({
-                                                                                                  start: function()
-                                                                                                         {
-                                                                                                             var startPos = jQuery('.divider#' + idDivider + ' + *');
-                                                                                                             var startPosition = startPos.position();
-                                                                                                             this.rightViewStartPosition = startPosition.left;
-    
-                                                                                                             var wRight = jQuery('.divider#' + idDivider + ' + *');
-                                                                                                             var rightViewWidth = wRight.width();
-                                                                                                             this.rightViewStartWidth = rightViewWidth;
-                                                                                                         },
-                                                                                                  drag:  function()
-                                                                                                         {
-                                                                                                             var p = jQuery('.divider#' + idDivider);
-                                                                                                             var position = p.position();
-                                                                                                             var w = jQuery('.side-scroller');
-                                                                                                             var width = w.width();
-                                                                                                             
-                                                                                                             // change width of left view
-                                                                                                             jQuery(".flexible-width#" + idView).attr({
-                                                                                                                                                          "style": "width: " + (position.left / width * 100) + '%'
-                                                                                                                                                      });
-                                                                                                             // change width of right view
-                                                                                                             jQuery('.divider#' + idDivider + ' + *').attr({
-                                                                                                                                                               "style": "width: " + (width - position.left - this.rightViewStartPosition) + 'px'
-                                                                                                                                                           });
-                                                                                                         },
-                                                                                                  stop:  function()
-                                                                                                         {
-                                                                                                         }
-                                                                                              });
+                jQuery(this.elementRef.nativeElement).find('.divider#' + idDivider).draggable(
+                    {
+                        start: function()
+                               {
+                                   var startPosition = jQuery('.divider#' + idDivider + ' + *').position();
+                                   this.rightViewStartPosition = startPosition.left;
+                               },
+                        drag:  function()
+                               {
+                                   var position = jQuery('.divider#' + idDivider).position();
+                                   var width = jQuery('.side-scroller').width();
+                            
+                                   // change width of left view
+                                   jQuery(".view#" + idView)
+                                       .attr({
+                                                 "style": "width: " + Math.abs((position.left - 5) / width * 100) + '%'
+                                             });
+                            
+                            
+                                   // change width of right view
+                                   jQuery('.divider#' + idDivider + ' + *')
+                                       .attr({
+                                                 "style": "width: " + (width - position.left - this.rightViewStartPosition) + 'px'
+                                             });
+                               },
+                        stop:  function()
+                               {
+                               }
+                    }
+                );
             }
         )
     }

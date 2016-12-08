@@ -13,7 +13,7 @@
     </terra-base-toolbar>
     <div class="side-scroller" *ngIf="inputModules">
         <template ngFor let-module [ngForOf]="inputModules" let-last="last" let-first="first">
-            <div class="flexible-width" id="{{module.name}}" *ngIf="!module.hidden" [style.width]="module.defaultWidth">
+            <div class="view" id="{{module.name}}" *ngIf="!module.hidden" [style.width]="module.defaultWidth">
                 <!--<terra-dynamic-module-loader *ngIf="!module.hidden" [inputModule]="module.module"-->
                                              <!--[inputMainComponentName]="module.mainComponentName"></terra-dynamic-module-loader>-->
                 <p style="white-space: pre-wrap">
@@ -30,7 +30,7 @@
                 </p>
             </div>
             <!--TODO make divider draggable-->
-            <div class="divider" id="divider_{{module.name}}" *ngIf="!last && !module.hidden"></div>
+            <div class="divider" id="divider_{{module.name}}" *ngIf="!last && !module.hidden" (click)="onDraggableDivider()"></div>
         </template>
     </div>
 </div>
