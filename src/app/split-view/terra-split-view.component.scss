@@ -9,6 +9,7 @@
     top: 54px;
     bottom: 0px;
     right: 0px;
+    border: solid 1px dodgerblue;
 }
 
 .side-scroller > *
@@ -35,8 +36,12 @@
     margin-left: 10px;
 }
 
-
 .view
 {
     vertical-align: top;
+}
+
+.constraint
+{
+    
 }

@@ -4,7 +4,9 @@ import {
     ElementRef,
     Inject,
     OnChanges,
-    DoCheck
+    OnInit,
+    AfterViewInit,
+    AfterViewChecked
 } from '@angular/core';
 import { TerraSplitViewInterface } from './data/terra-split-view.interface';
 import {
@@ -21,7 +23,7 @@ declare var jQuery:any;
                styles:   [require('./terra-split-view.component.scss').toString()],
                template: require('./terra-split-view.component.html')
            })
-export class TerraSplitViewComponent extends Locale implements OnChanges, DoCheck
+export class TerraSplitViewComponent extends Locale implements OnChanges, AfterViewChecked
 {
     
     @Input() inputModules:Array<TerraSplitViewInterface>;
@@ -40,16 +42,20 @@ export class TerraSplitViewComponent extends Locale implements OnChanges, DoChec
         this._breadCrumbsPath = '';
     }
     
+    ngAfterViewChecked()
+    {
+        this.onDraggableDivider();
+    }
     
-    ngDoCheck()
+    ngOnChanges()
     {
         if(this.inputModules)
         {
-            if(this.inputModules.length > 3)
+            if(this.inputModules.length > 3)    // maximum number of views per screen
             {
                 for(let index = this.inputModules.length - 1; index >= 0; index--)
                 {
-                    if(this.inputModules.length - 1 - index < 3)
+                    if(this.inputModules.length - index < 4)
                     {
                         this.inputModules[index].hidden = false;
                     }
@@ -86,11 +92,6 @@ export class TerraSplitViewComponent extends Locale implements OnChanges, DoChec
         }
     }
     
-    ngOnChanges()
-    {
-        this.onDraggableDivider();
-    }
-    
     public get breadCrumbsPath():string
     {
         return this._breadCrumbsPath;
@@ -109,11 +110,12 @@ export class TerraSplitViewComponent extends Locale implements OnChanges, DoChec
     private onClick():void
     {
         this.inputModules.pop();
+        this.ngOnChanges();
     }
     
     private copyPath():void
     {
-        this._breadCrumbsPath = "";
+        this._breadCrumbsPath = '';
         this.inputModules.forEach
         (
             (module) =>
@@ -132,17 +134,17 @@ export class TerraSplitViewComponent extends Locale implements OnChanges, DoChec
     
     private onDraggableDivider():void
     {
-        jQuery(this.elementRef.nativeElement).find('.divider').draggable({
-                                                                             axis:        "x",
-                                                                             containment: ".side-scroller"
-                                                                         });
         this.inputModules.forEach(
             (module) =>
             {
                 var idDivider = 'divider_' + module.name;
                 var idView = module.name;
-                jQuery(this.elementRef.nativeElement).find('.divider#' + idDivider).draggable(
+                var rightViewStartPosition = module.defaultWidth;
+                
+                jQuery('.divider#' + idDivider).draggable(
                     {
+                        axis:        'x',
+                        containment: '.view#' + idView,
                         start: function()
                                {
                                    var startPosition = jQuery('.divider#' + idDivider + ' + *').position();
@@ -150,24 +152,27 @@ export class TerraSplitViewComponent extends Locale implements OnChanges, DoChec
                                },
                         drag:  function()
                                {
+                                   var dividerWidth = jQuery('.divider').width();
                                    var position = jQuery('.divider#' + idDivider).position();
                                    var width = jQuery('.side-scroller').width();
                             
                                    // change width of left view
-                                   jQuery(".view#" + idView)
+                                   jQuery('.view#' + idView)
                                        .attr({
-                                                 "style": "width: " + Math.abs((position.left - 5) / width * 100) + '%'
+                                                 'style': 'width: ' + Math.abs((position.left - dividerWidth) / width * 100) + '%;'
                                              });
                             
                             
                                    // change width of right view
                                    jQuery('.divider#' + idDivider + ' + *')
                                        .attr({
-                                                 "style": "width: " + (width - position.left - this.rightViewStartPosition) + 'px'
+                                                 'style': 'width: ' + Math.abs(width - position.left - this.rightViewStartPosition) + 'px;' +
+                                                          'left: ' + Math.abs(position.left) + 'px;'
                                              });
                                },
                         stop:  function()
                                {
+                                   this.rightViewStartPosition = module.defaultWidth;
                                }
                     }
                 );
