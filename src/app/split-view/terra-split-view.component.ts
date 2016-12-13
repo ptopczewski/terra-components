@@ -51,11 +51,11 @@ export class TerraSplitViewComponent extends Locale implements OnChanges, AfterV
     {
         if(this.inputModules)
         {
-            if(this.inputModules.length > 3)    // maximum number of views per screen
+            if(this.inputModules.length > 4)    // maximum number of views per screen
             {
                 for(let index = this.inputModules.length - 1; index >= 0; index--)
                 {
-                    if(this.inputModules.length - index < 4)
+                    if(this.inputModules.length - index < 5)
                     {
                         this.inputModules[index].hidden = false;
                     }
@@ -144,30 +144,31 @@ export class TerraSplitViewComponent extends Locale implements OnChanges, AfterV
                 jQuery('.divider#' + idDivider).draggable(
                     {
                         axis:        'x',
-                        containment: '.view#' + idView,
+                        containment: '.constraint#' + idView,
                         start: function()
                                {
-                                   var startPosition = jQuery('.divider#' + idDivider + ' + *').position();
+                                   var startPosition = jQuery('.constraint#' + idView + ' + *').position();
                                    this.rightViewStartPosition = startPosition.left;
                                },
                         drag:  function()
                                {
                                    var dividerWidth = jQuery('.divider').width();
-                                   var position = jQuery('.divider#' + idDivider).position();
+                                   var dividerPosition = jQuery('.divider#' + idDivider).position();
+                                   var viewPosition = jQuery('.view#view_' + idView).position();
                                    var width = jQuery('.side-scroller').width();
                             
                                    // change width of left view
-                                   jQuery('.view#' + idView)
+                                   jQuery('.view#view_' + idView)
                                        .attr({
-                                                 'style': 'width: ' + Math.abs((position.left - dividerWidth) / width * 100) + '%;'
+                                                 'style': 'width: ' + Math.abs(dividerPosition.left - viewPosition.left) + 'px;'
                                              });
                             
                             
                                    // change width of right view
-                                   jQuery('.divider#' + idDivider + ' + *')
+                                   jQuery('.constraint#' + idView + ' + *')
                                        .attr({
-                                                 'style': 'width: ' + Math.abs(width - position.left - this.rightViewStartPosition) + 'px;' +
-                                                          'left: ' + Math.abs(position.left) + 'px;'
+                                                 'style': 'left: ' + Math.abs(dividerPosition.left) + 'px;' +
+                                                          'width: ' + Math.abs(width - dividerPosition.left - this.rightViewStartPosition) + 'px;'
                                              });
                                },
                         stop:  function()

@@ -33,10 +33,27 @@
 
 .divider + *
 {
-    margin-left: 10px;
+    //margin-left: 10px;
 }
 
 .view
 {
     vertical-align: top;
+    border: solid 1px green;
+}
+
+.constraint
+{
+    vertical-align: top;
+    border: solid 1px gold;
+}
+
+.constraint > *
+{
+    display: inline-block;
+}
+
+.constraint + *
+{
+    //margin-left: 10px;
 }
