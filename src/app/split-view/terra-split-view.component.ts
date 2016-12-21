@@ -4,9 +4,8 @@ import {
     ElementRef,
     Inject,
     OnChanges,
-    OnInit,
-    AfterViewInit,
-    AfterViewChecked
+    AfterViewChecked,
+    SimpleChanges
 } from '@angular/core';
 import { TerraSplitViewInterface } from './data/terra-split-view.interface';
 import {
@@ -28,6 +27,7 @@ export class TerraSplitViewComponent extends Locale implements OnChanges, AfterV
     
     @Input() inputModules:Array<TerraSplitViewInterface>;
     @Input() inputShowBreadcrumbs:boolean;
+    @Input() inputViewsPerScreen:number;
     private _isSingleComponent:boolean;
     private elementRef:ElementRef;
     private _breadCrumbsPath:string;
@@ -38,8 +38,9 @@ export class TerraSplitViewComponent extends Locale implements OnChanges, AfterV
     {
         super(locale, localization);
         this.elementRef = elementRef;
-        this.inputShowBreadcrumbs = true;
         this._breadCrumbsPath = '';
+        this.inputViewsPerScreen = 3;       //default
+        this.inputShowBreadcrumbs = true;   //default
     }
     
     ngAfterViewChecked()
@@ -47,15 +48,44 @@ export class TerraSplitViewComponent extends Locale implements OnChanges, AfterV
         this.onDraggableDivider();
     }
     
-    ngOnChanges()
+    ngOnChanges(changes:SimpleChanges)
+    {
+        if(changes["inputModules"])
+        {
+            setTimeout(() => this.updateViewPositions());
+        }
+    }
+    
+    public get breadCrumbsPath():string
+    {
+        return this._breadCrumbsPath;
+    }
+    
+    public set isSingleComponent(value:boolean)
+    {
+        this._isSingleComponent = value;
+    }
+    
+    public get isSingleComponent():boolean
+    {
+        return this._isSingleComponent;
+    }
+    
+    private onClick():void
+    {
+        this.inputModules.pop();
+        this.updateViewPositions();
+    }
+    
+    private updateViewPositions()
     {
         if(this.inputModules)
         {
-            if(this.inputModules.length > 4)    // maximum number of views per screen
+            if(this.inputModules.length > this.inputViewsPerScreen)
             {
                 for(let index = this.inputModules.length - 1; index >= 0; index--)
                 {
-                    if(this.inputModules.length - index < 5)
+                    if(this.inputModules.length - index < this.inputViewsPerScreen + 1)
                     {
                         this.inputModules[index].hidden = false;
                     }
@@ -80,7 +110,7 @@ export class TerraSplitViewComponent extends Locale implements OnChanges, AfterV
                     this.inputModules[2].hidden = false;
                 }
             }
-            
+        
             if(this.inputModules.length == 1)
             {
                 this._isSingleComponent = true;
@@ -90,27 +120,6 @@ export class TerraSplitViewComponent extends Locale implements OnChanges, AfterV
                 this._isSingleComponent = false;
             }
         }
-    }
-    
-    public get breadCrumbsPath():string
-    {
-        return this._breadCrumbsPath;
-    }
-    
-    public set isSingleComponent(value:boolean)
-    {
-        this._isSingleComponent = value;
-    }
-    
-    public get isSingleComponent():boolean
-    {
-        return this._isSingleComponent;
-    }
-    
-    private onClick():void
-    {
-        this.inputModules.pop();
-        this.ngOnChanges();
     }
     
     private copyPath():void
@@ -181,3 +190,4 @@ export class TerraSplitViewComponent extends Locale implements OnChanges, AfterV
         )
     }
 }
+
