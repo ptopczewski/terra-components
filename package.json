@@ -1,12 +1,12 @@
 {
-	"name": "@plentymarkets/terra-components",
+	"name": "ptopczewski/terra-components",
 	"version": "0.0.157",
-	"homepage": "https://github.com/plentymarkets/terra-components#readme",
-	"author": "plentymarkets",
+	"homepage": "https://github.com/ptopczewski/terra-components#readme",
+	"author": "Patryk Topczewski",
 	"description": "plentymarkets terra components",
 	"repository": {
 		"type": "git",
-		"url": "git+https://plentymarkets@github.com/plentymarkets/terra-components.git"
+		"url": "git+https://git@github.com/ptopczewski/terra-components.git"
 	},
 	"keywords": [
 		"angular2",
